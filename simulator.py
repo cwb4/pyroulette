@@ -1,4 +1,8 @@
+import argparse
 from player import create_player
+from wheel import create_wheel
+from table import Table
+from game import RouletteGame
 
 class Simulator:
     """ Initialized with a game and a player.
@@ -39,3 +43,40 @@ class Simulator:
             stakes = self.session()
             self.durations.append(len(stakes))
             self.maxima.append(max(stakes))
+
+
+def run_simulation(init_duration, init_stake, samples, player):
+    """ Run simulation, print the result to stdout
+
+    """
+    wheel = create_wheel()
+    table = Table(wheel)
+    game = RouletteGame(wheel, table)
+    simulator = Simulator(game, player,
+                          init_duration=init_duration, samples=samples,
+                          init_stake=init_stake)
+    simulator.gather()
+    print(simulator.durations)
+    print(simulator.maxima)
+
+
+def main():
+    """ Parse command line arguments
+
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--init-duration", type=int)
+    parser.add_argument("--init-stake", type=int)
+    parser.add_argument("--samples", type=int)
+    parser.add_argument("--player", choices=["Martingale", "Passenger57"])
+    parser.set_defaults(init_duration=250,
+                        init_stake=10,
+                        samples=50,
+                        player="Martingale")
+    args = parser.parse_args()
+    run_simulation(args.init_duration, args.init_stake,
+                   args.samples, args.player)
+
+
+if __name__ == "__main__":
+    main()
