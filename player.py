@@ -3,6 +3,7 @@ from bet import Bet
 
 import abc
 import sys
+import random
 
 class Player(metaclass=abc.ABCMeta):
     def __init__(self, table):
@@ -48,16 +49,14 @@ class Player(metaclass=abc.ABCMeta):
         """
         pass
 
-    @abc.abstractmethod
-    def on_win(self):
+    def on_win(self, _ununsed_bet):
         """ What to do next when the player wins.
         Update strategy to choose next bet
 
         """
         pass
 
-    @abc.abstractmethod
-    def on_loose(self):
+    def on_loose(self, _ununsed_bet):
         """ What to do next when the player looses.
         Update strategy to choose next bet
 
@@ -219,6 +218,31 @@ class Passenger57(Player):
 
         """
         self.losses.append(bet.bet_amount)
+
+class RandomPlayer(Player):
+    """ A player that plays randomly
+
+    """
+    def __init__(self, table, rng=None):
+        super().__init__(table)
+        if rng is None:
+            rng = random.Random()
+        self.rng = rng
+        all_outcomes = set()
+        for bin in self.table.wheel.bins:
+            for outcome in bin.outcomes:
+                all_outcomes.add(outcome)
+        self.outcomes_pool = list(all_outcomes)
+        self.bet_amount = 1
+
+    def next_bet(self):
+        """ Make a random bet by choosing a random outcome from
+        all the possible outcomes
+
+        """
+        outcome = self.rng.choice(self.outcomes_pool)
+        bet = Bet(self.bet_amount, outcome)
+        return bet
 
 
 def create_player(player_class_name, table, stake, duration):

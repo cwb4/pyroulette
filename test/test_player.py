@@ -1,4 +1,4 @@
-from player import Martingale, Passenger57, SevenReds
+from player import Martingale, Passenger57, SevenReds, RandomPlayer
 from wheel import create_wheel
 from non_random import NonRandom
 from game import RouletteGame, create_game
@@ -137,3 +137,37 @@ def test_seven_red_number_respect_duration():
     for i in range(7):
         game.cycle(player)
     assert player.playing() is False
+
+class NonRandomOutcomeChoice:
+    """ A non random choice generator
+
+    """
+    def __init__(self, wheel):
+        self.wheel = wheel
+        self.outcomes = list()
+        self._index = 0
+
+    def set_outcomes(self, outcomes):
+        """ To be called before the fake random generator
+        is used
+
+        """
+        self._index = 0
+        self.outcomes = outcomes[:]
+
+    def choice(self, _ununsed):
+        """ Override random.choice """
+        res = self.outcomes[self._index]
+        self._index += 1
+        return res
+
+def test_random_player():
+    wheel = create_wheel()
+    rng = NonRandomOutcomeChoice(wheel)
+    expected_outcomes = [wheel.get_outcome(n) for n in ["Black", "Low", "00"]]
+    rng.set_outcomes(expected_outcomes)
+    table = Table(wheel)
+    random_player = RandomPlayer(table, rng=rng)
+    bets = [random_player.next_bet() for i in range(3)]
+    actual_outcomes = [b.outcome for b in bets]
+    assert actual_outcomes == expected_outcomes
