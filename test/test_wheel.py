@@ -26,4 +26,4 @@ def test_get_outcome():
     wheel = Wheel()
     outcome_5 = Outcome("Five", 6)
     wheel.add_outcome(4, outcome_5)
-    assert wheel.get_outcoume("Five") == outcome_5
+    assert wheel.get_outcome("Five") == outcome_5

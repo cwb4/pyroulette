@@ -25,7 +25,7 @@ class Wheel:
         self.all_outcomes[outcome.name] = outcome
         self.bins[number].add(outcome)
 
-    def get_outcoume(self, name):
+    def get_outcome(self, name):
         return self.all_outcomes[name]
 
     def next(self):

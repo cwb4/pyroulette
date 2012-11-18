@@ -11,6 +11,8 @@ class RouletteGame:
         """ Player places the bets, and either win or loose
 
         """
+        if not player.playing():
+            return
         player.place_bets()
         bin = self.wheel.next()
         for bet in self.table:
