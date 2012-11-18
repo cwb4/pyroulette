@@ -31,7 +31,7 @@ def test_martingale_lucky():
     # win, gain 2, will bet 1
     assert player.stake == 103
 
-def test_martingale_unlucky():
+def test_martingale_loose_all():
     # Always red
     rng = NonRandom([1] * 4)
     wheel = create_wheel(rng=rng)
@@ -44,4 +44,19 @@ def test_martingale_unlucky():
         game.cycle(player)
 
     assert player.stake > 0
+    assert player.playing() is False
+
+def test_martingale_cant_make_huge_bets():
+    # Always red
+    rng = NonRandom([1] * 4)
+    wheel = create_wheel(rng=rng)
+    table = Table(wheel, max_limit=16)
+
+    player = Martingale(table, stake=32)
+    player.bet_amount = 4
+    game = RouletteGame(wheel, table)
+
+    for i in range(4):
+        game.cycle(player)
+
     assert player.playing() is False

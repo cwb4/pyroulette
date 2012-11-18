@@ -8,14 +8,14 @@ class Player(metaclass=abc.ABCMeta):
         self.stake = stake
         self.rounds_to_go = 0
         self.table = table
+        self._playing = True
 
-    @abc.abstractmethod
     def playing(self):
         """ Should return False when the player is done playing
         (Called by Game.cycle)
 
         """
-        pass
+        return self._playing
 
     @abc.abstractmethod
     def next_bet(self):
@@ -41,7 +41,21 @@ class Player(metaclass=abc.ABCMeta):
         pass
 
     def place_bets(self):
+        """ Calls the next_bet() method on the
+        player
+
+        If we can't afford the bet or the bet is over
+        the table limit, set self._playing to false
+        so that the game knows we are done
+
+        """
         bet = self.next_bet()
+        if bet.bet_amount > self.stake:
+            self._playing = False
+            return
+        if bet.bet_amount >= self.table.max_limit:
+            self._playing = False
+            return
         self.stake -= bet.bet_amount
         self.table.place_bet(bet)
 
@@ -97,12 +111,6 @@ class Martingale(Player):
         self.loss_count += 1
         self.bet_amount *= 2
 
-    def playing(self):
-        """ We'll stop playing if we cannot do the next bet
-
-        """
-        return self.stake >= self.bet_amount
-
 class Passenger57(Player):
     """ A Player that always bet on 'Black'
 
@@ -135,9 +143,3 @@ class Passenger57(Player):
 
         """
         self.losses.append(bet.bet_amount)
-
-    def playing(self):
-        """ We'll stop playing if we cannot do the next bet
-
-        """
-        return self.stake >= self.bet_amount
