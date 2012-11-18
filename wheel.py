@@ -12,7 +12,7 @@ class Wheel:
 
     """
     def __init__(self, rng=None):
-        self.bins = tuple(Bin() for i in range(38))
+        self.bins = tuple(Bin(i) for i in range(38))
         if rng is None:
             rng = random.Random()
         self.rng = rng

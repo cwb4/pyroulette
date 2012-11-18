@@ -5,7 +5,8 @@ by the roulette
 
 class Bin:
     """ A collection of outcomes """
-    def __init__(self, *outcomes):
+    def __init__(self, index_, *outcomes):
+        self.index_ = index_
         self.outcomes = frozenset(outcomes)
 
     def add(self, outcome):
@@ -15,4 +16,7 @@ class Bin:
         self.outcomes |= set([outcome])
 
     def __str__(self):
-        pass
+        if self.index_ == 37:
+            return "00"
+        else:
+            return "%2i" % self.index_
