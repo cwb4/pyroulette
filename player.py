@@ -132,7 +132,6 @@ class Player(metaclass=abc.ABCMeta):
 
 
 class Martingale(Player):
-    outcome = Outcome("Black", 1)
     def __init__(self, table):
         super().__init__(table)
         self.loss_count = 0
