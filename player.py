@@ -4,18 +4,26 @@ from bet import Bet
 import abc
 
 class Player(metaclass=abc.ABCMeta):
-    def __init__(self, table, stake=10):
+    def __init__(self, table, stake=10, rounds_to_go=250):
         self.stake = stake
-        self.rounds_to_go = 0
+        self.rounds_to_go = rounds_to_go
         self.table = table
-        self._playing = True
+        self._can_play = True
+
 
     def playing(self):
         """ Should return False when the player is done playing
         (Called by Game.cycle)
 
         """
-        return self._playing
+        return self._can_play and self.wants_to_play()
+
+    def wants_to_play(self):
+        """ Overlood this if you want to stop playing
+        before you can no longer play
+
+        """
+        return True
 
     @abc.abstractmethod
     def next_bet(self):
@@ -49,12 +57,15 @@ class Player(metaclass=abc.ABCMeta):
         so that the game knows we are done
 
         """
+        self.rounds_to_go -= 1
         bet = self.next_bet()
         if bet.bet_amount > self.stake:
-            self._playing = False
-            return
+            self._can_play = False
         if bet.bet_amount >= self.table.max_limit:
-            self._playing = False
+            self._can_play = False
+        if self.rounds_to_go < 0:
+            self._can_play = False
+        if not self.playing():
             return
         self.stake -= bet.bet_amount
         self.table.place_bet(bet)
@@ -82,8 +93,8 @@ class Player(metaclass=abc.ABCMeta):
 
 class Martingale(Player):
     outcome = Outcome("Black", 1)
-    def __init__(self, table, stake=10):
-        super().__init__(table, stake=stake)
+    def __init__(self, table, stake=10, rounds_to_go=250):
+        super().__init__(table, stake=stake, rounds_to_go=rounds_to_go)
         self.loss_count = 0
         self.bet_amount = 1
 
@@ -117,8 +128,8 @@ class Passenger57(Player):
     """
     bet_amount = 10
 
-    def __init__(self, table, stake=10):
-        super().__init__(table, stake=stake)
+    def __init__(self, table, stake=10, rounds_to_go=250):
+        super().__init__(table, stake=stake, rounds_to_go=rounds_to_go)
         self.wins = list()
         self.losses = list()
 

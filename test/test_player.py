@@ -1,4 +1,4 @@
-from player import Martingale
+from player import Martingale, Passenger57
 from wheel import create_wheel
 from non_random import NonRandom
 from game import RouletteGame
@@ -60,3 +60,34 @@ def test_martingale_cant_make_huge_bets():
         game.cycle(player)
 
     assert player.playing() is False
+
+def test_player_in_hurry():
+    # Always black
+    rng = NonRandom([2] * 4)
+    wheel = create_wheel(rng=rng)
+    table = Table(wheel)
+    player = Passenger57(table, rounds_to_go=3)
+    game = RouletteGame(wheel, table)
+
+    for i in range(4):
+        game.cycle(player)
+    assert player.playing() is False
+    assert player.stake == 40
+
+def test_cautious_martingale():
+    class CautiousMartingale(Martingale):
+        def wants_to_play(self):
+            return self.stake <= 102
+
+    # Always black
+    rng = NonRandom([2] * 4)
+    wheel = create_wheel(rng=rng)
+    table = Table(wheel)
+    player = CautiousMartingale(table, stake=100)
+    game = RouletteGame(wheel, table)
+
+    for i in range(4):
+        game.cycle(player)
+
+    assert player.playing() is False
+    assert player.stake == 103
