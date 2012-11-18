@@ -3,6 +3,7 @@ from player import create_player
 from wheel import create_wheel
 from table import Table
 from game import RouletteGame
+import statistics
 
 class Simulator:
     """ Initialized with a game and a player.
@@ -56,8 +57,21 @@ def run_simulation(init_duration, init_stake, samples, player):
                           init_duration=init_duration, samples=samples,
                           init_stake=init_stake)
     simulator.gather()
-    print(simulator.durations)
-    print(simulator.maxima)
+    durations = simulator.durations
+    maxima = simulator.maxima
+    print(player)
+    print()
+    print("Durations")
+    print("  min :", min(durations))
+    print("  max :", max(durations))
+    print("  mean: %.2f" % statistics.mean(durations))
+    print("  dev : %.2f" % statistics.stdev(durations))
+    print("Maxima")
+    print("  min :", min(maxima))
+    print("  max :", max(maxima))
+    print("  mean: %.2f" % statistics.mean(maxima))
+    print("  dev : %.2f" % statistics.stdev(maxima))
+
 
 
 def main():
