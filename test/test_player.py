@@ -1,4 +1,4 @@
-from player import Martingale, Passenger57
+from player import Martingale, Passenger57, SevenReds
 from wheel import create_wheel
 from non_random import NonRandom
 from game import RouletteGame, create_game
@@ -87,3 +87,49 @@ def test_cautious_martingale():
 
     assert player.playing() is False
     assert player.stake == 103
+
+def test_seven_red_waits():
+    # 7 Reds, 1 Black, 2 Red
+    rng = NonRandom([1] * 7 + [2] + [1] * 9)
+    game = create_game(rng=rng)
+    player = SevenReds(game.table)
+
+    for i in range(9):
+        game.cycle(player)
+
+    # Bet 1 and gain 1
+    assert player.stake == 11
+
+    game.cycle(player)
+    assert player.stake == 11
+
+    for i in range(7):
+        game.cycle(player)
+
+    # Re-bet 1, re-bet 2
+    assert player.stake == 8
+
+def test_seven_red_double_when_loose():
+    # 10 Reds, 1 Black
+    rng = NonRandom([1] * 10 + [2])
+    game = create_game(rng=rng)
+    player = SevenReds(game.table)
+
+    for i in range(7):
+        game.cycle(player)
+    assert player.stake == 10
+    game.cycle(player)
+    assert player.stake == 9
+    game.cycle(player)
+    assert player.stake == 7
+    game.cycle(player)
+    assert player.stake == 3
+
+def test_seven_red_number_respect_duration():
+    rng = NonRandom([2] * 10)
+    game = create_game(rng=rng)
+    player = SevenReds(game.table)
+    player.set_duration(4)
+    for i in range(7):
+        game.cycle(player)
+    assert player.playing() is False

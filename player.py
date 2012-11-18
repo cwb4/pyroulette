@@ -10,6 +10,7 @@ class Player(metaclass=abc.ABCMeta):
         self.rounds_to_go = 250
         self.table = table
         self._can_play = True
+        self._done_playing = False
 
     def set_duration(self, duration):
         """ Set the maximum number of rounds
@@ -29,7 +30,9 @@ class Player(metaclass=abc.ABCMeta):
         (Called by Game.cycle)
 
         """
-        return self._can_play and self.wants_to_play()
+        return self._can_play and \
+               not self._done_playing and \
+               self.wants_to_play()
 
     def wants_to_play(self):
         """ Overlood this if you want to stop playing
@@ -77,20 +80,36 @@ class Player(metaclass=abc.ABCMeta):
         so that the game knows we are done
 
         """
+        self.check_done_playing()
+        self.rounds_to_go -= 1
+        if self._done_playing:
+            return
         bet = self.next_bet()
         if not bet:
             return
-        self.rounds_to_go -= 1
+        self.check_can_play(bet)
+        if not self._can_play:
+            return
+        self.stake -= bet.bet_amount
+        self.table.place_bet(bet)
+
+    def check_done_playing(self):
+        """ Compute self._done_playing. Called at each place_bets
+        call
+
+        """
+        if self.rounds_to_go <= 0:
+            self._done_playing = True
+
+    def check_can_play(self, bet):
+        """ Compute self._can_play. Called at whenever a bet
+        is about to be mad
+
+        """
         if bet.bet_amount > self.stake:
             self._can_play = False
         if bet.bet_amount >= self.table.max_limit:
             self._can_play = False
-        if self.rounds_to_go < 0:
-            self._can_play = False
-        if not self.playing():
-            return
-        self.stake -= bet.bet_amount
-        self.table.place_bet(bet)
 
     def win(self, bet):
         """ Called by Game.cycle when the player won
@@ -152,11 +171,11 @@ class SevenReds(Martingale):
     """
     def __init__(self, table):
         super().__init__(table)
-        sef.red_count = 7
+        self.red_count = 7
 
     def winners(self, outcomes):
         """ Overrid Player.winners """
-        red_outcome = sef.table.wheel.get_outcome("Red")
+        red_outcome = self.table.wheel.get_outcome("Red")
         if red_outcome in outcomes:
             self.red_count -= 1
         else:
@@ -164,7 +183,7 @@ class SevenReds(Martingale):
 
     def next_bet(self):
         """ Implements Player.next_bet """
-        if self.red_count == 0:
+        if self.red_count <= 0:
             black = self.table.wheel.get_outcome("Black")
             return Bet(self.bet_amount, black)
 
