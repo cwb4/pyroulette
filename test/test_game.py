@@ -10,7 +10,8 @@ def test_roulette_game():
     wheel = create_wheel(rng)
     table = Table(wheel)
 
-    player = Passenger57(table, stake=20)
+    player = Passenger57(table)
+    player.set_stake(20)
     game = RouletteGame(wheel, table)
     game.cycle(player)
     assert player.losses == [10]

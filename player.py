@@ -4,12 +4,24 @@ from bet import Bet
 import abc
 
 class Player(metaclass=abc.ABCMeta):
-    def __init__(self, table, stake=10, rounds_to_go=250):
-        self.stake = stake
-        self.rounds_to_go = rounds_to_go
+    def __init__(self, table):
+        self.stake = 10
+        self.rounds_to_go = 250
         self.table = table
         self._can_play = True
 
+    def set_duration(self, duration):
+        """ Set the maximum number of rounds
+        for this player
+
+        """
+        self.rounds_to_go = duration
+
+    def set_stake(self, initial_stake):
+        """ Set the initial stake of the player
+
+        """
+        self.stake = initial_stake
 
     def playing(self):
         """ Should return False when the player is done playing
@@ -93,8 +105,8 @@ class Player(metaclass=abc.ABCMeta):
 
 class Martingale(Player):
     outcome = Outcome("Black", 1)
-    def __init__(self, table, stake=10, rounds_to_go=250):
-        super().__init__(table, stake=stake, rounds_to_go=rounds_to_go)
+    def __init__(self, table):
+        super().__init__(table)
         self.loss_count = 0
         self.bet_amount = 1
 
@@ -128,8 +140,8 @@ class Passenger57(Player):
     """
     bet_amount = 10
 
-    def __init__(self, table, stake=10, rounds_to_go=250):
-        super().__init__(table, stake=stake, rounds_to_go=rounds_to_go)
+    def __init__(self, table):
+        super().__init__(table)
         self.wins = list()
         self.losses = list()
 

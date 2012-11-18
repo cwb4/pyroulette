@@ -10,7 +10,8 @@ def test_martingale_lucky():
     wheel = create_wheel(rng=rng)
     table = Table(wheel)
 
-    player = Martingale(table, stake=100)
+    player = Martingale(table)
+    player.set_stake(100)
     game = RouletteGame(wheel, table)
     # win
     game.cycle(player)
@@ -37,7 +38,8 @@ def test_martingale_loose_all():
     wheel = create_wheel(rng=rng)
     table = Table(wheel)
 
-    player = Martingale(table, stake=8)
+    player = Martingale(table)
+    player.set_stake(8)
     game = RouletteGame(wheel, table)
 
     for i in range(4):
@@ -52,7 +54,8 @@ def test_martingale_cant_make_huge_bets():
     wheel = create_wheel(rng=rng)
     table = Table(wheel, max_limit=16)
 
-    player = Martingale(table, stake=32)
+    player = Martingale(table)
+    player.set_stake(32)
     player.bet_amount = 4
     game = RouletteGame(wheel, table)
 
@@ -66,7 +69,9 @@ def test_player_in_hurry():
     rng = NonRandom([2] * 4)
     wheel = create_wheel(rng=rng)
     table = Table(wheel)
-    player = Passenger57(table, rounds_to_go=3)
+    player = Passenger57(table)
+    player.set_duration(3)
+    player.set_stake(10)
     game = RouletteGame(wheel, table)
 
     for i in range(4):
@@ -83,7 +88,8 @@ def test_cautious_martingale():
     rng = NonRandom([2] * 4)
     wheel = create_wheel(rng=rng)
     table = Table(wheel)
-    player = CautiousMartingale(table, stake=100)
+    player = CautiousMartingale(table)
+    player.set_stake(100)
     game = RouletteGame(wheel, table)
 
     for i in range(4):
