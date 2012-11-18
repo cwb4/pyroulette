@@ -166,3 +166,13 @@ class Passenger57(Player):
 
         """
         self.losses.append(bet.bet_amount)
+
+
+def create_player(player_class, table, stake, duration):
+    """ Create a new player given a class
+
+    """
+    player = player_class(table)
+    player.set_duration(duration)
+    player.set_stake(stake)
+    return player
