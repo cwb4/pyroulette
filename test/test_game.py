@@ -1,17 +1,14 @@
 from player import Passenger57
 from table import Table
-from wheel import Wheel
+from wheel import create_wheel
 from game import RouletteGame
-from builder import BinBuilder
 from non_random import NonRandom
 
 
 def test_roulette_game():
     rng = NonRandom([0, 2])
-    wheel = Wheel(rng=rng)
-    builder = BinBuilder()
-    builder.build_bins(wheel)
-    table = Table()
+    wheel = create_wheel(rng)
+    table = Table(wheel)
 
     player = Passenger57(table)
     player.stake = 20

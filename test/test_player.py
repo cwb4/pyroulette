@@ -1,6 +1,5 @@
 from player import Martingale
-from wheel import Wheel
-from builder import BinBuilder
+from wheel import create_wheel
 from non_random import NonRandom
 from game import RouletteGame
 from table import Table
@@ -8,10 +7,8 @@ from table import Table
 def test_martingale_lucky():
     # black, red, red,red, black, black
     rng = NonRandom([2, 5, 9, 12, 11, 10])
-    wheel = Wheel(rng=rng)
-    builder = BinBuilder()
-    builder.build_bins(wheel)
-    table = Table()
+    wheel = create_wheel(rng=rng)
+    table = Table(wheel)
 
     player = Martingale(table)
     player.stake = 100
@@ -38,10 +35,8 @@ def test_martingale_lucky():
 def test_martingale_unlucky():
     # Always red
     rng = NonRandom([1] * 4)
-    wheel = Wheel(rng=rng)
-    builder = BinBuilder()
-    builder.build_bins(wheel)
-    table = Table()
+    wheel = create_wheel(rng=rng)
+    table = Table(wheel)
 
     player = Martingale(table)
     player.stake = 8

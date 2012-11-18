@@ -5,6 +5,7 @@
 import random
 
 from bin import Bin
+from builder import BinBuilder
 
 class Wheel:
     """ A collection of bins and a random generator
@@ -40,4 +41,13 @@ class Wheel:
         """
         return self.bins[bin]
 
+
+def create_wheel(rng=None):
+    """ Create a new wheel given a random generator
+
+    """
+    wheel = Wheel(rng=rng)
+    builder = BinBuilder()
+    builder.build_bins(wheel)
+    return wheel
 
