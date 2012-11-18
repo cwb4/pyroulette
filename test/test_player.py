@@ -10,8 +10,7 @@ def test_martingale_lucky():
     wheel = create_wheel(rng=rng)
     table = Table(wheel)
 
-    player = Martingale(table)
-    player.stake = 100
+    player = Martingale(table, stake=100)
     game = RouletteGame(wheel, table)
     # win
     game.cycle(player)
@@ -38,8 +37,7 @@ def test_martingale_unlucky():
     wheel = create_wheel(rng=rng)
     table = Table(wheel)
 
-    player = Martingale(table)
-    player.stake = 8
+    player = Martingale(table, stake=8)
     game = RouletteGame(wheel, table)
 
     for i in range(4):

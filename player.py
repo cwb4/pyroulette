@@ -4,8 +4,8 @@ from bet import Bet
 import abc
 
 class Player(metaclass=abc.ABCMeta):
-    def __init__(self, table):
-        self.stake = 0
+    def __init__(self, table, stake=10):
+        self.stake = stake
         self.rounds_to_go = 0
         self.table = table
 
@@ -68,9 +68,8 @@ class Player(metaclass=abc.ABCMeta):
 
 class Martingale(Player):
     outcome = Outcome("Black", 1)
-    def __init__(self, table):
-        super().__init__(table)
-        self.stake = 0
+    def __init__(self, table, stake=10):
+        super().__init__(table, stake=stake)
         self.loss_count = 0
         self.bet_amount = 1
 
@@ -110,8 +109,8 @@ class Passenger57(Player):
     """
     bet_amount = 10
 
-    def __init__(self, table):
-        super().__init__(table)
+    def __init__(self, table, stake=10):
+        super().__init__(table, stake=stake)
         self.wins = list()
         self.losses = list()
 
