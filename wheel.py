@@ -15,12 +15,18 @@ class Wheel:
         if rng is None:
             rng = random.Random()
         self.rng = rng
+        # A map name -> Outcome
+        self.all_outcomes = dict()
 
     def add_outcome(self, number, outcome):
         """ Add the given outcome to the given number
 
         """
+        self.all_outcomes[outcome.name] = outcome
         self.bins[number].add(outcome)
+
+    def get_outcoume(self, name):
+        return self.all_outcomes[name]
 
     def next(self):
         """ Return the next bin

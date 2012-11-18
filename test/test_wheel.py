@@ -32,3 +32,5 @@ def test_run_the_wheel():
     wheel.rng.set_seed(37)
     bin = wheel.next()
     assert bin.outcomes == frozenset([outcome_00, outcome_5])
+
+    assert wheel.get_outcoume("Five") == outcome_5
