@@ -103,10 +103,14 @@ def test_seven_red_waits():
     game.cycle(player)
     assert player.stake == 11
 
-    for i in range(7):
+    # Finish the seven series:
+    for i in range(5):
         game.cycle(player)
 
-    # Re-bet 1, re-bet 2
+    # Re-bet 1, loose and  bet 2
+    for i in range(2):
+        game.cycle(player)
+
     assert player.stake == 8
 
 def test_seven_red_double_when_loose():
