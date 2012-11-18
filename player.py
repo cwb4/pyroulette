@@ -61,6 +61,13 @@ class Player(metaclass=abc.ABCMeta):
         """
         pass
 
+    def winners(self, outcomes):
+        """ Called by Game every round.
+        This lets the player update its next bet even when not playing
+
+        """
+        pass
+
     def place_bets(self):
         """ Calls the next_bet() method on the
         player
@@ -70,8 +77,10 @@ class Player(metaclass=abc.ABCMeta):
         so that the game knows we are done
 
         """
-        self.rounds_to_go -= 1
         bet = self.next_bet()
+        if not bet:
+            return
+        self.rounds_to_go -= 1
         if bet.bet_amount > self.stake:
             self._can_play = False
         if bet.bet_amount >= self.table.max_limit:

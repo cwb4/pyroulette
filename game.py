@@ -11,16 +11,15 @@ class RouletteGame:
         """ Player places the bets, and either win or loose
 
         """
+        if player.playing():
+            player.place_bets()
+        bin = self.wheel.next()
+        player.winners(bin.outcomes)
         if not player.playing():
             return
-        player.place_bets()
-        bin = self.wheel.next()
         for bet in self.table:
             if bet.outcome in bin.outcomes:
                 player.win(bet)
             else:
                 player.loose(bet)
             self.table.bets.remove(bet)
-
-
-
