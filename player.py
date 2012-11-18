@@ -2,6 +2,7 @@ from outcome import Outcome
 from bet import Bet
 
 import abc
+import sys
 
 class Player(metaclass=abc.ABCMeta):
     def __init__(self, table):
@@ -168,10 +169,11 @@ class Passenger57(Player):
         self.losses.append(bet.bet_amount)
 
 
-def create_player(player_class, table, stake, duration):
+def create_player(player_class_name, table, stake, duration):
     """ Create a new player given a class
 
     """
+    player_class = getattr(sys.modules[__name__], player_class_name)
     player = player_class(table)
     player.set_duration(duration)
     player.set_stake(stake)

@@ -19,7 +19,7 @@ def create_simulator():
     wheel = create_wheel(rng=rng)
     table = Table(wheel)
     game = RouletteGame(wheel, table)
-    simulator = Simulator(game, Passenger57,
+    simulator = Simulator(game, "Passenger57",
                           init_duration=4, samples=3,
                           init_stake=10)
     return simulator
