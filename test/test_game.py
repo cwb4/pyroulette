@@ -14,8 +14,8 @@ def test_roulette_game():
     player.stake = 20
     game = RouletteGame(wheel, table)
     game.cycle(player)
-    assert player.loss == [10]
+    assert player.losses == [10]
     assert player.wins == list()
     game.cycle(player)
-    assert player.loss == [10]
+    assert player.losses == [10]
     assert player.wins == [10]
