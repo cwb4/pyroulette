@@ -3,34 +3,6 @@ from bet import Bet
 
 import abc
 
-class Player1236(Player):
-    """ A player with a state machine
-
-    State       Bet   On Win      On Loss
-    -------------------------------------
-    No Wins     1     One Win     No Wins
-    One Win     3     Two Wins    No Wins
-    Two Wins    2     Three Wins  No Wins
-    Three Wins  6     No Wins     No Wins
-    """
-    def __init__(self, table):
-        super().__init__(table)
-        self.outcome = self.table.wheel.get_outcome("Black")
-        self.state = NoWinState(self)
-
-    def next_bet(self):
-        """ Implements Player.next_bet """
-        bet = self.state.current_bet()
-        return bet
-
-    def on_win(self, _):
-        """ Implements Player.on_win """
-        self.state = self.state.next_won()
-
-    def on_loose(self, _):
-        """ Implements Player.on_win """
-        self.state = self.state.next_lost()
-
 
 class PlayerState(metaclass=abc.ABCMeta):
     """ A Base classe for the Player1236 possible states

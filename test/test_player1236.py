@@ -2,6 +2,7 @@ from table import create_table
 from non_random import NonRandom
 from game import create_game
 from player1236 import *
+from player import Player1236
 
 
 def test_player_state():
