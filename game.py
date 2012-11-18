@@ -1,3 +1,6 @@
+from wheel import create_wheel
+from table import Table
+
 class RouletteGame:
     """ Manage the game of Roulette.
     Notify players to place bets, spin the wheel, and resolve bets
@@ -23,3 +26,10 @@ class RouletteGame:
             else:
                 player.loose(bet)
             self.table.bets.remove(bet)
+
+def create_game(rng=None):
+    """ Create a new gam """
+    wheel = create_wheel(rng=rng)
+    table = Table(wheel)
+    game = RouletteGame(wheel, table)
+    return game
