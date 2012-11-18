@@ -68,7 +68,7 @@ def main():
     parser.add_argument("--init-duration", type=int)
     parser.add_argument("--init-stake", type=int)
     parser.add_argument("--samples", type=int)
-    parser.add_argument("--player", choices=["Martingale", "Passenger57"])
+    parser.add_argument("--player")
     parser.set_defaults(init_duration=250,
                         init_stake=10,
                         samples=50,
