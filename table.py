@@ -1,3 +1,4 @@
+from wheel import create_wheel
 from bet import InvalidBet
 
 class Table:
@@ -39,3 +40,8 @@ class Table:
 
     def __next__(self):
         return next(self._it)
+
+def create_table():
+    wheel = create_wheel()
+    table = Table(wheel)
+    return table
