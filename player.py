@@ -144,6 +144,30 @@ class Martingale(Player):
         self.loss_count += 1
         self.bet_amount *= 2
 
+
+class SevenReds(Martingale):
+    """ A specialization of Martingale.
+    Waits for 7 red in a row to start betting
+
+    """
+    def __init__(self, table):
+        super().__init__(table)
+        sef.red_count = 7
+
+    def winners(self, outcomes):
+        """ Overrid Player.winners """
+        red_outcome = sef.table.wheel.get_outcome("Red")
+        if red_outcome in outcomes:
+            self.red_count -= 1
+        else:
+            self.red_count = 7
+
+    def next_bet(self):
+        """ Implements Player.next_bet """
+        if self.red_count == 0:
+            black = self.table.wheel.get_outcome("Black")
+            return Bet(self.bet_amount, black)
+
 class Passenger57(Player):
     """ A Player that always bet on 'Black'
 
