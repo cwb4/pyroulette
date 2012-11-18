@@ -44,3 +44,4 @@ def test_martingale_unlucky():
         game.cycle(player)
 
     assert player.stake > 0
+    assert player.playing() is False
